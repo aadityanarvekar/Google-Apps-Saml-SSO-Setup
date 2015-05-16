@@ -110,7 +110,7 @@
 					<button type="submit" id = "authorize" class="btn btn-primary btn-lg" name = "submitValue" value = "Authorize" onclick="buttonID = 0;">Authorize</button>
 					
 				
-					    <input type="text" class="form-control" id="domainInput" name = "userEnteredDomain" placeholder="Domain" value = "devmicrostrategy.com" />
+					    <input type="text" class="form-control" id="domainInput" name = "userEnteredDomain" placeholder="Domain"  />
 					  <br />
 					   <div id = "authorizationCode" class = "alert alert-success">"<?php echo $_GET['code'];?>"</div>
 					  <button type="submit" id = "configureSAMLSSO" class="btn btn-primary btn-lg" name = "submitValue" value = "configure" onclick="buttonID = 1;">Configure SSO</button>
@@ -162,8 +162,8 @@
 			event.preventDefault();
 			
 			if (buttonID == 0) {
-					var redirectURI = "http://www.aadityanarvekar.com/GoogleApps/index.php";
-					var URL = "https://accounts.google.com/o/oauth2/auth?response_type=code&redirect_uri="+encodeURIComponent(redirectURI)+"&scope=https%3A%2F%2Fapps-apis.google.com%2Fa%2Ffeeds%2Fdomain%2F&state=TEST_ACCESS_REQUEST&client_id=451274390469-ttotrev9ve7b21md9njb9vj1iqlmic5c.apps.googleusercontent.com";
+					var redirectURI = "ENTER YOUR RE-DIRECT URI HERE";
+					var URL = "https://accounts.google.com/o/oauth2/auth?response_type=code&redirect_uri="+encodeURIComponent(redirectURI)+"&scope=https%3A%2F%2Fapps-apis.google.com%2Fa%2Ffeeds%2Fdomain%2F&state=TEST_ACCESS_REQUEST&client_id=CLIENT_ID_PROCURED_FROM_GOOGLE_DEV_CONSOLE";
 			
 					window.location = URL;
 			
