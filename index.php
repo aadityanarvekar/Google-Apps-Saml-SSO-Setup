@@ -48,7 +48,7 @@
 			font-size: 1.1em;
 		}
 		
-		.alert-danger {
+		.alert {
 			display: none;
 			margin-bottom: 10px;
 			text-align: center;
@@ -101,7 +101,7 @@
 				</p>
 				<br />
 				
-				<div id = "displayAccessToken" class = "alert alert-danger">Token:</div>
+				<div id = "displayAccessToken" class = "alert alert-success">Token:</div>
 				<div id = "invalidEntry" class = "alert alert-danger">Please enter a valid domain!</div>
 				
 				<form id = "submitDomainForm" method = "post">
@@ -110,7 +110,7 @@
 					<button type="submit" id = "authorize" class="btn btn-primary btn-lg" name = "submitValue" value = "Authorize" onclick="buttonID = 0;">Authorize</button>
 					
 				
-					    <input type="text" class="form-control" id="domainInput" name = "userEnteredDomain" placeholder="Domain"  />
+					    <input type="text" class="form-control" id="domainInput" name = "userEnteredDomain" placeholder="Domain" value = "devmicrostrategy.com" />
 					  <br />
 					   <div id = "authorizationCode" class = "alert alert-success">"<?php echo $_GET['code'];?>"</div>
 					  <button type="submit" id = "configureSAMLSSO" class="btn btn-primary btn-lg" name = "submitValue" value = "configure" onclick="buttonID = 1;">Configure SSO</button>
@@ -150,7 +150,6 @@
 		console.log("Auth Code: "+authCode);
 		
 		if (authCode != "") {
-			// $("#authorize").toggleClass("disabled");
 			$("#authorize").css("display", "none");
 			$("#domainInput").fadeIn(1000);
 			$("#instructions").html("Enter user domain and click on button to Configure SSO.");
@@ -162,8 +161,8 @@
 			event.preventDefault();
 			
 			if (buttonID == 0) {
-					var redirectURI = "ENTER YOUR RE-DIRECT URI HERE";
-					var URL = "https://accounts.google.com/o/oauth2/auth?response_type=code&redirect_uri="+encodeURIComponent(redirectURI)+"&scope=https%3A%2F%2Fapps-apis.google.com%2Fa%2Ffeeds%2Fdomain%2F&state=TEST_ACCESS_REQUEST&client_id=CLIENT_ID_PROCURED_FROM_GOOGLE_DEV_CONSOLE";
+					var redirectURI = "REDIRECT_URI";
+					var URL = "https://accounts.google.com/o/oauth2/auth?response_type=code&redirect_uri="+encodeURIComponent(redirectURI)+"&scope=SCOPE&state=TEST_ACCESS_REQUEST&client_id=CLIENTID";
 			
 					window.location = URL;
 			
@@ -175,6 +174,7 @@
 				var userEnteredDomain = $("#domainInput").val();
 				var accessToken;
 				var xmlID;
+				var finalResponse;
 				if (userEnteredDomain == "") {
 					event.preventDefault();
 					$("#invalidEntry").css("display", "block");
@@ -185,18 +185,28 @@
 						if (data) {
 							console.log("Token"+data);
 							accessToken = data;
-							//$("#displayAccessToken").html("Access Token: "+data);
 							$("#configureSAMLSSO").attr("disabled", "disabled");
 							$.get("retrieveSSO.php?accessToken="+data+"&domain="+userEnteredDomain).done(function(newdata) {
 								console.log("Response from SSO Page: "+newdata);
 								xmlID = newdata;
 								console.log("New Data: "+newdata);
 								
-								$("#displayAccessToken").html("Access Token: "+accessToken);
-								$("#displayAccessToken").append("\nID: "+xmlID);
-								$("#displayAccessToken").fadeIn();
 								
-							})
+								
+								
+								if (xmlID != "") {
+									console.log("ENCODED ID: "+encodeURIComponent(xmlID));
+									$.get("updateSSO.php?domain="+userEnteredDomain+"&ID="+encodeURIComponent(xmlID)+"&accessToken="+accessToken).done(function(response) {
+										console.log("Final Response: "+response);
+										if (response) {
+											$("#displayAccessToken").html("SSO Settings updated successfully!");
+											$("#displayAccessToken").fadeIn();
+										}	
+									});
+								}
+								
+								
+							});
 						}
 						
 				});
