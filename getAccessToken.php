@@ -17,7 +17,7 @@
 	$response = curl_exec($ch);
 	$json = json_decode($response, true);
 	
-	if ($json['error'] != "") {
+	if (isset($json['error']) && $json['error'] != "") {
 		$error = $json['error_description'];
 		echo "Error: ".$error;
 	} else {
