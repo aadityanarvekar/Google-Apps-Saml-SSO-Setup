@@ -7,14 +7,14 @@
 	//echo "<br />".$uri;
 	
 	$ch = curl_init(); 
-	curl_setopt($ch, CURLOPT_URL, $uri);
-	curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-	curl_setopt($ch, CURLOPT_POST, false);
-	curl_setopt($ch, CURLOPT_HTTPHEADER, array(
-	    'Authorization: Bearer '.$accessToken));
-	curl_setopt($ch, CURLOPT_HEADER, false);
-		
-
+	$hdr = array('Authorization: Bearer '.$accessToken);
+	curl_setopt_array($ch, array(
+	CURLOPT_RETURNTRANSFER => 1,
+	CURLOPT_URL => $uri,
+	CURLOPT_HTTPHEADER => $hdr
+	));
+	
+	
 	$data = curl_exec($ch); 
 	curl_close($ch);
 	
@@ -22,7 +22,7 @@
 	$xml = new SimpleXMLElement($data);
 	$id = $xml->id;
 	echo $id;
-
-
+	
+	
 	
 ?>
